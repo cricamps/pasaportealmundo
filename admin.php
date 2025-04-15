@@ -20,7 +20,7 @@ include 'includes/db.php';
     <h2>Gestión de Paquetes Turísticos</h2>
     <div>
       <a href="agregar_paquete.php" class="btn btn-success me-2">➕ Agregar Paquete</a>
-      <a href="logout_admin.php" class="btn btn-outline-danger">Cerrar sesión</a>
+      <a href="usuarios.php" class="btn btn-primary me-2">👥 Administrar Usuarios</a>  <a href="logout_admin.php" class="btn btn-outline-danger">Cerrar sesión</a>
     </div>
   </div>
 
@@ -45,8 +45,7 @@ include 'includes/db.php';
         <td><?php echo date("d/m/Y", strtotime($row['fecha_disponible'])); ?></td>
         <td>$<?php echo number_format($row['precio'], 0, ',', '.'); ?></td>
         <td>
-        <a href="usuarios.php" class="btn btn-outline-dark mb-3">👥 Administrar Usuarios</a>  
-        <a href="editar_paquete.php?id=<?php echo $row['id']; ?>" class="btn btn-sm btn-outline-primary">✏️ Editar</a>
+          <a href="editar_paquete.php?id=<?php echo $row['id']; ?>" class="btn btn-sm btn-outline-primary">✏️ Editar</a>
           <a href="eliminar_paquete.php?id=<?php echo $row['id']; ?>" class="btn btn-sm btn-outline-danger" onclick="return confirm('¿Estás seguro de eliminar este paquete?')">🗑️ Eliminar</a>
         </td>
       </tr>
