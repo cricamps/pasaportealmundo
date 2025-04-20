@@ -50,7 +50,10 @@ if (isset($_GET['id'])) {
                     <h2 class="card-title" style="color:#003366;"><?php echo htmlspecialchars($paquete['destino']); ?></h2>
                     <p class="card-text my-3"><?php echo htmlspecialchars($paquete['descripcion']); ?></p>
                     <h4 class="precio mb-4">$<?php echo number_format($paquete['precio'], 0, ',', '.'); ?></h4>
+                    <div class="d-flex justify-content-center gap-3">
                     <a href="index.php" class="btn btn-custom">Volver al inicio</a>
+                    <a href="reservar_paquete.php?id=<?php echo $paquete['id']; ?>" class="btn btn-primary">Reservar Paquete</a>
+                </div>
                 </div>
             </div>
         </div>
