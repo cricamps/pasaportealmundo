@@ -1,0 +1,8 @@
+[2025-04-19T02:02:45.535360+00:00] logout_admin.INFO: Cierre de sesión de administrador: Administrador [] []
+[2025-04-19T02:05:48.285019+00:00] logout_admin.INFO: Cierre de sesión de administrador: Administrador [] []
+[2025-04-19T02:06:56.600080+00:00] login.WARNING: Intento de inicio de sesión fallido (contraseña incorrecta): pablo@gmail.com [] []
+[2025-04-19T02:07:04.515286+00:00] login.WARNING: Intento de inicio de sesión fallido (contraseña incorrecta): pablo@gmail.com [] []
+[2025-04-19T02:07:11.405125+00:00] login.WARNING: Intento de inicio de sesión fallido (contraseña incorrecta): pablo@gmail.com [] []
+[2025-04-19T02:07:42.341206+00:00] logout_admin.INFO: Cierre de sesión de administrador: Administrador [] []
+[2025-04-19T02:33:29.708239+00:00] logout_admin.INFO: Cierre de sesión de administrador: Administrador [] []
+[2025-04-19T16:46:35.108994+00:00] index.ERROR: Error de conexión a la base de datos:  [] []
