@@ -1,81 +1,60 @@
 <?php
 session_start();
 if (!isset($_SESSION['usuario'])) {
-    header("Location: login.php");
+    header('Location: login.php');
     exit;
 }
-
-include '../config/db.php';
-
-use Monolog\Logger;
-use Monolog\Handler\StreamHandler;
-
-require __DIR__ . '/../vendor/autoload.php';
-
-$log = new Logger('perfil');
-$log->pushHandler(new StreamHandler(__DIR__ . '../logs/app.log', Logger::WARNING));
-
-$error_message = ""; // Para mensajes de error/éxito
-
-// Obtener datos del usuario desde la base de datos
-$email = $_SESSION['email'];
-$sql = "SELECT * FROM usuarios WHERE email = ?";
-$usuario = obtenerFila($conn, $sql, [$email], "s");
-
-if (!$usuario) {
-    $error_message = "Error al obtener los datos del usuario";
-    $log->error("Error al obtener los datos del usuario: " . $conn->error);
-}
-
-if (isset($_POST['guardar'])) {
-    $nombre = $_POST['nombre'];
-    $email = $_POST['email'];
-
-    if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-        $error_message = "Formato de correo electrónico inválido";
-    } else {
-        $sql = "UPDATE usuarios SET nombre = ?, email = ? WHERE email = ?";
-        $result = ejecutarConsulta($conn, $sql, [$nombre, $email, $_SESSION['email']], "sss");
-
-        if ($result) {
-            $_SESSION['usuario'] = $nombre;
-            $_SESSION['email'] = $email;
-            $error_message = "Datos actualizados correctamente";
-            $log->info("Perfil de usuario actualizado: " . $_SESSION['email']);
-        } else {
-            $error_message = "Error al actualizar los datos";
-            $log->error("Error al actualizar los datos del usuario: " . $conn->error);
-        }
-    }
-}
 ?>
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mi Perfil</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="assets/css/styles.css" rel="stylesheet">
 </head>
 <body>
-<div class="container mt-5">
-    <h2 class="mb-4">🧾 Mi Perfil</h2>
-    <?php if ($error_message): ?>
-        <div class="alert alert-info"><?php echo $error_message; ?></div>
-    <?php endif; ?>
-    <form method="POST">
-        <div class="mb-3">
-            <label class="form-label">Nombre</label>
-            <input type="text" class="form-control" name="nombre" value="<?php echo htmlspecialchars($usuario['nombre'] ?? ''); ?>" required>
-        </div>
 
-        <div class="mb-3">
-            <label class="form-label">Correo electrónico</label>
-            <input type="email" class="form-control" name="email" value="<?php echo htmlspecialchars($usuario['email'] ?? ''); ?>" required>
+<!-- Navbar -->
+<nav class="navbar navbar-expand-lg">
+    <div class="container">
+        <a class="navbar-brand" href="index.php">
+            <img src="https://cdn-icons-png.flaticon.com/512/69/69915.png" alt="Logo">
+            Pasaporte al Mundo
+        </a>
+        <div class="d-flex align-items-center">
+            <span class="text-white me-3">
+                Bienvenido, <?php echo htmlspecialchars($_SESSION['usuario']['nombre']); ?>
+            </span>
+            <a href="logout.php" class="btn btn-custom">Cerrar Sesión</a>
         </div>
+    </div>
+</nav>
 
-        <button type="submit" name="guardar" class="btn btn-primary">Guardar cambios</button>
-        <a href="index.php" class="btn btn-secondary">Volver</a>
-    </form>
-</div>
+<main class="container mt-5">
+    <h1 class="text-center mb-4" style="color:#003366;">Mi Perfil</h1>
+    
+    <div class="card mx-auto" style="max-width: 500px;">
+        <div class="card-body">
+            <h5 class="card-title text-center" style="color:#003366;"><?php echo htmlspecialchars($_SESSION['usuario']['nombre']); ?></h5>
+            <p class="text-center mb-3"><?php echo htmlspecialchars($_SESSION['usuario']['email']); ?></p>
+            <p class="text-center"><strong>Tipo de Usuario:</strong> <?php echo htmlspecialchars($_SESSION['usuario']['tipo']); ?></p>
+            <div class="d-grid mt-4">
+                <a href="index.php" class="btn btn-custom">Volver al Inicio</a>
+            </div>
+        </div>
+    </div>
+</main>
+
+<!-- Footer -->
+<footer class="mt-5 py-4" style="background-color: #002244;">
+    <div class="container text-center">
+        <p class="mb-0 text-white small">© 2025 Pasaporte al Mundo - Todos los derechos reservados.</p>
+    </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
