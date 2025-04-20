@@ -49,16 +49,17 @@ $result = mysqli_query($conn, $sql);
                 $imagen = !empty($row['imagen']) ? 'assets/img/' . $row['imagen'] : 'assets/img/default.jpg';
         ?>
             <div class="col-sm-12 col-md-6 col-lg-4 col-xl-3 d-flex">
-                <div class="card animacion-cards" style="animation-delay: <?php echo $delay; ?>s;">
+                <a href="detalle_paquete.php?id=<?php echo $row['id']; ?>" class="text-decoration-none flex-grow-1">
+                 <div class="card animacion-cards" style="animation-delay: <?php echo $delay; ?>s;">
                     <img src="<?php echo $imagen; ?>" class="card-img-top" alt="<?php echo htmlspecialchars($row['destino']); ?>">
                     <div class="card-body d-flex flex-column">
-                        <h5 class="card-title">Paquete a <?php echo htmlspecialchars($row['destino']); ?></h5>
+                        <h5 class="card-title" style="color:#003366;"><?php echo htmlspecialchars($row['destino']); ?></h5>
                         <p class="card-text"><?php echo htmlspecialchars($row['descripcion']); ?></p>
                         <p class="precio mt-auto">$<?php echo number_format($row['precio'], 0, ',', '.'); ?></p>
-                        <a href="detalle_paquete.php?id=<?php echo $row['id']; ?>" class="btn btn-primary btn-sm mt-2">Ver detalles</a>
-                    </div>
-                </div>
             </div>
+        </div>
+    </a>
+</div>
         <?php
                 $delay += 0.1;
             }
