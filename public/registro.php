@@ -23,6 +23,12 @@ session_start();
     </div>
 </nav>
 
+<?php if (isset($_SESSION['mensaje_error'])) { ?>
+    <div class="alert alert-danger text-center">
+        <?php echo $_SESSION['mensaje_error']; unset($_SESSION['mensaje_error']); ?>
+    </div>
+<?php } ?>
+
 <main class="main-formulario">
     <div class="card-formulario">
         <h2 class="text-center mb-4" style="color: #003366;">Crear Cuenta</h2>
@@ -36,26 +42,27 @@ session_start();
                 <input type="email" class="form-control" id="email" name="email" required>
             </div>
             <div class="mb-3">
-                <label for="contrasena" class="form-label">Contraseña</label>
-                <input type="password" class="form-control" id="contrasena" name="contrasena" required>
+                <label for="password" class="form-label">Contraseña</label>
+                <input type="password" class="form-control" id="password" name="password" required minlength="6">
+                <div class="form-text">La contraseña debe tener al menos 6 caracteres.</div>
             </div>
             <div class="d-grid">
-                <button type="submit" class="btn btn-primary">Registrarme</button>
+                <button type="submit" class="btn btn-primary">Registrarse</button>
             </div>
             <div class="text-center mt-3">
-                <small>¿Ya tienes cuenta? <a href="login.php">Inicia sesión</a></small>
+                <small>¿Ya tienes una cuenta? <a href="login.php">Inicia Sesión</a></small>
             </div>
         </form>
-        <div class="text-center mt-3">
-        <a href="index.php" class="btn btn-custom btn-sm">Volver al inicio</a>
-</div>
 
+        <div class="text-center mt-3">
+            <a href="index.php" class="btn btn-custom btn-sm">Volver al inicio</a>
+        </div>
     </div>
 </main>
 
 <footer class="mt-5 py-4" style="background-color: #002244;">
     <div class="container text-center">
-        <p class="mb-0 text-white small">© 2025 Pasaporte al Mundo - Todos los derechos reservados.</p>
+        <p class="mb-0 text-white small">© <?php echo date('Y'); ?> Pasaporte al Mundo - Todos los derechos reservados.</p>
     </div>
 </footer>
 
