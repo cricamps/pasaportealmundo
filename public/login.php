@@ -23,6 +23,13 @@ session_start();
     </div>
 </nav>
 
+<?php if (isset($_SESSION['mensaje_error'])) { ?>
+    <div class="alert alert-danger text-center">
+        <?php echo $_SESSION['mensaje_error']; unset($_SESSION['mensaje_error']); ?>
+    </div>
+<?php } ?>
+
+
 <main class="main-formulario">
     <div class="card-formulario">
         <h2 class="text-center mb-4" style="color: #003366;">Iniciar Sesión</h2>
@@ -33,7 +40,7 @@ session_start();
     </div>
     <div class="mb-3">
         <label for="contrasena" class="form-label">Contraseña</label>
-        <input type="password" class="form-control" id="contrasena" name="contrasena" required>
+        <input type="password" class="form-control" id="contrasena" name="password" required>
     </div>
     <div class="d-grid">
         <button type="submit" class="btn btn-primary">Ingresar</button>
