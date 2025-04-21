@@ -30,12 +30,16 @@ $result = mysqli_query($conn, $sql);
             </a>
             <div class="d-flex align-items-center">
                 <?php if (isset($_SESSION['usuario'])) { ?>
-                    <span class="text-white me-3">Bienvenido,
-                        <?php echo htmlspecialchars($_SESSION['usuario']['nombre']); ?></span>
+                    <span class="text-white me-3">
+                        Bienvenido, <?php echo htmlspecialchars($_SESSION['usuario']['nombre']); ?>
+                    </span>
                     <a href="perfil.php" class="btn btn-custom me-2">Mi Perfil</a>
+
                     <?php if ($_SESSION['usuario']['tipo'] == 'admin') { ?>
+                        <a href="admin_paquetes.php" class="btn btn-custom me-2">Administrar Paquetes</a>
                         <a href="admin_usuarios.php" class="btn btn-custom me-2">Administrar Usuarios</a>
                     <?php } ?>
+
                     <a href="logout.php" class="btn btn-custom">Cerrar Sesión</a>
                 <?php } else { ?>
                     <a href="login.php" class="btn btn-custom me-2">Iniciar Sesión</a>
