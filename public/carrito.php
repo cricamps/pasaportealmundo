@@ -6,7 +6,7 @@ if (isset($_GET['eliminar'])) {
     $indice = intval($_GET['eliminar']);
     if (isset($_SESSION['carrito'][$indice])) {
         unset($_SESSION['carrito'][$indice]);
-        $_SESSION['carrito'] = array_values($_SESSION['carrito']); // Reordenamos el array
+        $_SESSION['carrito'] = array_values($_SESSION['carrito']); // Reordenamos
     }
     header('Location: carrito.php');
     exit;
@@ -36,8 +36,8 @@ if (isset($_GET['eliminar'])) {
 
 <main class="container mt-5">
     <h1 class="text-center mb-4" style="color:#003366;">Mi Carrito de Reservas</h1>
-    
-    <?php if (isset($_SESSION['carrito']) && count($_SESSION['carrito']) > 0) { ?>
+
+    <?php if (!empty($_SESSION['carrito'])) { ?>
         <div class="row g-4">
             <?php foreach ($_SESSION['carrito'] as $indice => $paquete) { ?>
                 <div class="col-sm-12 col-md-6 col-lg-4 col-xl-3 d-flex">
@@ -53,23 +53,37 @@ if (isset($_GET['eliminar'])) {
                 </div>
             <?php } ?>
         </div>
+
+        <?php
+        $total = 0;
+        foreach ($_SESSION['carrito'] as $paquete) {
+            $total += $paquete['precio'];
+        }
+        ?>
+
         <div class="text-center mt-5">
-            <a href="index.php" class="btn btn-custom">Seguir Reservando</a>
+            <h3 style="color:#003366;">Total a pagar: $<?php echo number_format($total, 0, ',', '.'); ?></h3>
+
+            <div class="d-flex justify-content-center gap-3 mt-4">
+                <a href="index.php" class="btn btn-primary">← Seguir Reservando</a>
+                <a href="procesar_pago.php" class="btn btn-success">Pagar Ahora 💳</a>
+            </div>
         </div>
+
     <?php } else { ?>
         <div class="text-center">
             <img src="assets/img/default.jpg" alt="Carrito vacío" style="width:100px; height:100px; margin-bottom: 20px;">
             <h4 style="color: #003366;">¡Tu carrito está vacío!</h4>
             <p>Es momento de encontrar tu próximo destino.</p>
-            <a href="index.php" class="btn btn-custom mt-3">Ver paquetes</a>
-</div>
+            <a href="index.php" class="btn btn-primary mt-3">Ver paquetes</a>
+        </div>
     <?php } ?>
 </main>
 
 <!-- Footer -->
 <footer class="mt-5 py-4" style="background-color: #002244;">
     <div class="container text-center">
-        <p class="mb-0 text-white small">© 2025 Pasaporte al Mundo - Todos los derechos reservados.</p>
+        <p class="mb-0 text-white small">© <?php echo date('Y'); ?> Pasaporte al Mundo - Todos los derechos reservados.</p>
     </div>
 </footer>
 

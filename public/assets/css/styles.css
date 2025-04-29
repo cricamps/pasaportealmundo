@@ -133,3 +133,8 @@ footer {
     background-color: white;
     color: #003366;
 }
+
+.favorito span:hover {
+    transform: scale(1.3);
+    transition: 0.3s;
+}
