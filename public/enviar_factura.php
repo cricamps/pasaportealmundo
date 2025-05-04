@@ -1,11 +1,13 @@
 <?php
 session_start();
 require '../vendor/autoload.php';
+include '../config/db.php';
+require_once '../config/configuracion_smtp.php';
+
+
 use Dompdf\Dompdf;
 use Dompdf\Options;
-include '../config/db.php';
 
-// Validar sesión y parámetros
 if (!isset($_SESSION['usuario']) || !isset($_GET['id'])) {
     header('Location: login.php');
     exit;
@@ -28,8 +30,7 @@ $sql_detalles = "SELECT pd.*, p.destino
 $result_detalles = mysqli_query($conn, $sql_detalles);
 
 $numero_factura = 'F-' . str_pad($pago_id, 5, '0', STR_PAD_LEFT);
-$html = '
-    <h1 style="text-align:center; color:#003366;">Pasaporte al Mundo</h1>
+$html = '<h1 style="text-align:center; color:#003366;">Pasaporte al Mundo</h1>
     <h2 style="text-align:center;">Factura de Pago</h2>
     <hr>
     <p><strong>N° Factura:</strong> ' . $numero_factura . '</p>
@@ -69,7 +70,13 @@ $dompdf = new Dompdf($options);
 $dompdf->loadHtml($html);
 $dompdf->setPaper('A4', 'portrait');
 $dompdf->render();
-$nombre_usuario = preg_replace('/[^A-Za-z0-9]/', '', $_SESSION['usuario']['nombre']);
-$dompdf->stream('Factura_' . $numero_factura . '_' . $nombre_usuario . '.pdf', ['Attachment' => true]);
-exit;
+$pdf = $dompdf->output();
+
+$estado = enviarFacturaPorCorreo($_SESSION['usuario']['email'], $_SESSION['usuario']['nombre'], $pdf, $numero_factura);
+
+if ($estado === true) {
+    echo "<script>alert('Factura enviada por correo.'); window.location.href='historial_pagos.php';</script>";
+} else {
+    echo "Error: " . $estado;
+}
 ?>
