@@ -10,7 +10,7 @@ if (!isset($_SESSION['favoritos'])) {
     $_SESSION['favoritos'] = [];
 }
 
-// Traemos los paquetes de la base de datos
+// Traer los paquetes
 $sql = "SELECT * FROM paquetes ORDER BY destino ASC";
 $result = mysqli_query($conn, $sql);
 ?>
@@ -24,7 +24,6 @@ $result = mysqli_query($conn, $sql);
     <title>Pasaporte al Mundo</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
-
 <body>
 
 <!-- Navbar -->
@@ -39,19 +38,19 @@ $result = mysqli_query($conn, $sql);
                 <span class="text-white me-3">
                     Bienvenido, <?php echo htmlspecialchars($_SESSION['usuario']['nombre']); ?>
                 </span>
-                <a href="perfil.php" class="btn btn-custom me-2">Mi Perfil</a>
-                <a href="carrito.php" class="btn btn-custom me-2">Ver Carrito</a>
-                <a href="historial_pagos.php" class="btn btn-light btn-sm me-2">Mis Pagos</a>
+                <a href="perfil.php" class="btn btn-nav me-2">Mi Perfil</a>
+                <a href="carrito.php" class="btn btn-nav me-2">Ver Carrito</a>
+                <a href="historial_pagos.php" class="btn btn-nav me-2">Mis Pagos</a>
 
                 <?php if ($_SESSION['usuario']['tipo'] == 'admin') { ?>
-                    <a href="admin_paquetes.php" class="btn btn-custom me-2">Administrar Paquetes</a>
-                    <a href="admin_usuarios.php" class="btn btn-custom me-2">Administrar Usuarios</a>
+                    <a href="admin_paquetes.php" class="btn btn-nav me-2">Administrar Paquetes</a>
+                    <a href="admin_usuarios.php" class="btn btn-nav me-2">Administrar Usuarios</a>
                 <?php } ?>
 
-                <a href="logout.php" class="btn btn-custom">Cerrar Sesión</a>
+                <a href="logout.php" class="btn btn-nav">Cerrar Sesión</a>
             <?php } else { ?>
-                <a href="login.php" class="btn btn-custom me-2">Iniciar Sesión</a>
-                <a href="registro.php" class="btn btn-custom">Registrarse</a>
+                <a href="login.php" class="btn btn-nav me-2">Iniciar Sesión</a>
+                <a href="registro.php" class="btn btn-nav">Registrarse</a>
             <?php } ?>
         </div>
     </div>
@@ -63,7 +62,7 @@ $result = mysqli_query($conn, $sql);
     </div>
 <?php } ?>
 
-<!-- Contenido principal -->
+<!-- Contenido -->
 <main class="container mt-5">
     <h1 class="text-center mb-4" style="color:#003366;">Paquetes Turísticos Disponibles</h1>
     <div class="row g-4">
@@ -113,7 +112,7 @@ $result = mysqli_query($conn, $sql);
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 <script>
-// Hacemos que el mensaje de bienvenida desaparezca después de 3 segundos
+// Mensaje de bienvenida animado
 setTimeout(function () {
     var mensaje = document.getElementById('mensajeBienvenida');
     if (mensaje) {

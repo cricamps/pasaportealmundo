@@ -46,4 +46,43 @@ function enviarFacturaPorCorreo($usuarioEmail, $nombreUsuario, $pdfContent, $num
         return "Error al enviar correo: {$mail->ErrorInfo}";
     }
 }
+
+function enviarCorreoBienvenida($usuarioEmail, $nombreUsuario) {
+    global $conn;
+
+    $sql = "SELECT * FROM configuracion_smtp LIMIT 1";
+    $result = mysqli_query($conn, $sql);
+
+    if (!$result || mysqli_num_rows($result) == 0) {
+        return "Error: No se encontró configuración SMTP.";
+    }
+
+    $smtp = mysqli_fetch_assoc($result);
+
+    $mail = new PHPMailer(true);
+    try {
+        $mail->isSMTP();
+        $mail->Host = $smtp['host'];
+        $mail->SMTPAuth = true;
+        $mail->Username = $smtp['usuario'];
+        $mail->Password = descifrarClave($smtp['password']);
+        $mail->SMTPSecure = $smtp['seguridad'];
+        $mail->Port = $smtp['puerto'];
+
+        $mail->setFrom($smtp['remitente_correo'], $smtp['remitente_nombre']);
+        $mail->addAddress($usuarioEmail, $nombreUsuario);
+
+        $mail->isHTML(true);
+        $mail->Subject = "¡Bienvenido a Pasaporte al Mundo!";
+        $mail->Body = "<p>Hola <strong>$nombreUsuario</strong>,</p>
+                       <p>Gracias por registrarte en <strong>Pasaporte al Mundo</strong>. Ya puedes iniciar sesión y explorar nuestros paquetes turísticos.</p>
+                       <p>¡Esperamos que tengas una gran experiencia!</p>";
+
+        $mail->send();
+        return true;
+    } catch (Exception $e) {
+        return "Error al enviar correo: {$mail->ErrorInfo}";
+    }
+}
+
 ?>

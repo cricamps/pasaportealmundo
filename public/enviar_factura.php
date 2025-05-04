@@ -4,7 +4,6 @@ require '../vendor/autoload.php';
 include '../config/db.php';
 require_once '../config/configuracion_smtp.php';
 
-
 use Dompdf\Dompdf;
 use Dompdf\Options;
 
@@ -16,6 +15,7 @@ if (!isset($_SESSION['usuario']) || !isset($_GET['id'])) {
 $pago_id = intval($_GET['id']);
 $usuario_id = $_SESSION['usuario']['id'];
 
+// Obtener pago
 $sql_pago = "SELECT * FROM pagos WHERE id = $pago_id AND usuario_id = $usuario_id";
 $result_pago = mysqli_query($conn, $sql_pago);
 if (!$result_pago || mysqli_num_rows($result_pago) == 0) {
@@ -23,14 +23,24 @@ if (!$result_pago || mysqli_num_rows($result_pago) == 0) {
 }
 $pago = mysqli_fetch_assoc($result_pago);
 
+// Detalles del pago
 $sql_detalles = "SELECT pd.*, p.destino 
                  FROM pago_detalle pd
                  INNER JOIN paquetes p ON pd.paquete_id = p.id
                  WHERE pd.pago_id = $pago_id";
 $result_detalles = mysqli_query($conn, $sql_detalles);
 
+// Número de factura
 $numero_factura = 'F-' . str_pad($pago_id, 5, '0', STR_PAD_LEFT);
-$html = '<h1 style="text-align:center; color:#003366;">Pasaporte al Mundo</h1>
+
+// Cargar imagen en base64
+$imgPath = realpath(__DIR__ . '/assets/img/ticket.png');
+$imgData = base64_encode(file_get_contents($imgPath));
+$imgSrc = 'data:image/png;base64,' . $imgData;
+
+// Generar HTML
+$html = '
+    <h1 style="text-align:center; color:#003366;">Pasaporte al Mundo</h1>
     <h2 style="text-align:center;">Factura de Pago</h2>
     <hr>
     <p><strong>N° Factura:</strong> ' . $numero_factura . '</p>
@@ -48,6 +58,7 @@ $html = '<h1 style="text-align:center; color:#003366;">Pasaporte al Mundo</h1>
             </tr>
         </thead>
         <tbody>';
+
 while ($detalle = mysqli_fetch_assoc($result_detalles)) {
     $total_detalle = $detalle['precio_unitario'] * $detalle['cantidad'];
     $html .= '<tr>
@@ -57,13 +68,15 @@ while ($detalle = mysqli_fetch_assoc($result_detalles)) {
                 <td>$' . number_format($total_detalle, 0, ',', '.') . '</td>
               </tr>';
 }
+
 $html .= '</tbody></table>
     <h3 style="text-align:right;">Total Pagado: $' . number_format($pago['monto_total'], 0, ',', '.') . '</h3>
     <div style="margin-top:30px; text-align:center;">
-        <img src="assets/img/ticket.png" style="width:50px; vertical-align:middle;">
+        <img src="' . $imgSrc . '" style="width:50px; vertical-align:middle;">
         <span style="font-size:24px; color:green; font-weight:bold;">PAGADO</span>
     </div>';
 
+// Crear PDF
 $options = new Options();
 $options->set('isRemoteEnabled', true);
 $dompdf = new Dompdf($options);
@@ -72,6 +85,7 @@ $dompdf->setPaper('A4', 'portrait');
 $dompdf->render();
 $pdf = $dompdf->output();
 
+// Enviar por correo
 $estado = enviarFacturaPorCorreo($_SESSION['usuario']['email'], $_SESSION['usuario']['nombre'], $pdf, $numero_factura);
 
 if ($estado === true) {
