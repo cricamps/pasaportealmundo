@@ -5,7 +5,6 @@ use Dompdf\Dompdf;
 use Dompdf\Options;
 include '../config/db.php';
 
-// Validar sesión y parámetros
 if (!isset($_SESSION['usuario']) || !isset($_GET['id'])) {
     header('Location: login.php');
     exit;
@@ -28,6 +27,12 @@ $sql_detalles = "SELECT pd.*, p.destino
 $result_detalles = mysqli_query($conn, $sql_detalles);
 
 $numero_factura = 'F-' . str_pad($pago_id, 5, '0', STR_PAD_LEFT);
+
+// Cargar imagen como base64
+$imgPath = realpath('assets/img/ticket.png');
+$imgData = base64_encode(file_get_contents($imgPath));
+$imgSrc = 'data:image/png;base64,' . $imgData;
+
 $html = '
     <h1 style="text-align:center; color:#003366;">Pasaporte al Mundo</h1>
     <h2 style="text-align:center;">Factura de Pago</h2>
@@ -47,6 +52,7 @@ $html = '
             </tr>
         </thead>
         <tbody>';
+
 while ($detalle = mysqli_fetch_assoc($result_detalles)) {
     $total_detalle = $detalle['precio_unitario'] * $detalle['cantidad'];
     $html .= '<tr>
@@ -56,10 +62,11 @@ while ($detalle = mysqli_fetch_assoc($result_detalles)) {
                 <td>$' . number_format($total_detalle, 0, ',', '.') . '</td>
               </tr>';
 }
+
 $html .= '</tbody></table>
     <h3 style="text-align:right;">Total Pagado: $' . number_format($pago['monto_total'], 0, ',', '.') . '</h3>
     <div style="margin-top:30px; text-align:center;">
-        <img src="../assets/img/ticket.png" style="width:50px; vertical-align:middle;">
+        <img src="' . $imgSrc . '" style="width:50px; vertical-align:middle;">
         <span style="font-size:24px; color:green; font-weight:bold;">PAGADO</span>
     </div>';
 
@@ -72,4 +79,3 @@ $dompdf->render();
 $nombre_usuario = preg_replace('/[^A-Za-z0-9]/', '', $_SESSION['usuario']['nombre']);
 $dompdf->stream('Factura_' . $numero_factura . '_' . $nombre_usuario . '.pdf', ['Attachment' => true]);
 exit;
-?>

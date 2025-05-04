@@ -60,7 +60,7 @@ while ($detalle = mysqli_fetch_assoc($result_detalles)) {
 $html .= '</tbody></table>
     <h3 style="text-align:right;">Total Pagado: $' . number_format($pago['monto_total'], 0, ',', '.') . '</h3>
     <div style="margin-top:30px; text-align:center;">
-        <img src="../assets/img/ticket.png" style="width:50px; vertical-align:middle;">
+        <img src="assets/img/ticket.png" style="width:50px; vertical-align:middle;">
         <span style="font-size:24px; color:green; font-weight:bold;">PAGADO</span>
     </div>';
 
