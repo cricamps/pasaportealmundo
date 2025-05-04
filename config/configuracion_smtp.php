@@ -1,13 +1,16 @@
 <?php
 use PHPMailer\PHPMailer\PHPMailer;
-use PHPMailer\PHPMailer\SMTP;
 use PHPMailer\PHPMailer\Exception;
 
 require '../vendor/autoload.php';
 require_once '../config/db.php';
+require_once '../config/secret.php';
 
-function enviarFacturaPorCorreo($usuarioEmail, $nombreUsuario, $pdfContent, $numeroFactura)
-{
+function descifrarClave($claveCifrada) {
+    return openssl_decrypt($claveCifrada, 'AES-256-CBC', ENCRYPTION_KEY, 0, ENCRYPTION_IV);
+}
+
+function enviarFacturaPorCorreo($usuarioEmail, $nombreUsuario, $pdfContent, $numeroFactura) {
     global $conn;
 
     $sql = "SELECT * FROM configuracion_smtp LIMIT 1";
@@ -23,11 +26,11 @@ function enviarFacturaPorCorreo($usuarioEmail, $nombreUsuario, $pdfContent, $num
     try {
         $mail->isSMTP();
         $mail->Host = $smtp['host'];
+        $mail->SMTPAuth = true;
         $mail->Username = $smtp['usuario'];
-        $mail->Password = $smtp['password'];
+        $mail->Password = descifrarClave($smtp['password']); // Aquí descifra
         $mail->SMTPSecure = $smtp['seguridad'];
         $mail->Port = $smtp['puerto'];
-
 
         $mail->setFrom($smtp['remitente_correo'], $smtp['remitente_nombre']);
         $mail->addAddress($usuarioEmail, $nombreUsuario);
@@ -43,3 +46,4 @@ function enviarFacturaPorCorreo($usuarioEmail, $nombreUsuario, $pdfContent, $num
         return "Error al enviar correo: {$mail->ErrorInfo}";
     }
 }
+?>
