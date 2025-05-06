@@ -61,7 +61,7 @@ $imagen = !empty($paquete['imagen']) ? 'assets/img/' . $paquete['imagen'] : 'ass
             <h2 class="card-title mb-3"><?php echo htmlspecialchars($paquete['destino']); ?></h2>
             <p class="card-text"><?php echo htmlspecialchars($paquete['descripcion']); ?></p>
             <h4 class="text-primary mt-3">$<?php echo number_format($paquete['precio'], 0, ',', '.'); ?></h4>
-            <a href="agregar_carrito.php?id=<?php echo $paquete['id']; ?>" class="btn btn-primary mt-3">Reservar Paquete</a>
+            <a href="reservar_paquete.php?id=<?php echo $paquete['id']; ?>" class="btn btn-primary mt-3">Reservar Paquete</a>
         </div>
     </div>
 
